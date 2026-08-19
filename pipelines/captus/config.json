@@ -1,0 +1,13 @@
+{
+	"ref_dir" : "/shared/projects/hyam_stages/stage_noemie/data/genome_ref/Eunicella_cavolini",
+	"contigs_path" : "/shared/projects/hyam_stages/stage_noemie/data/captus",
+	"genome_ref" : "Eunicella_cavolini_GCA_965177985.1_jaEunCavo1.1_genomic.fna",
+	"results_path" : "/shared/projects/hyam_stages/stage_noemie/results/captus/ECESC4",
+	"echantillon" : "ECESC4",
+	"chromomap" : "/shared/projects/hyam_stages/stage_noemie/results/eunicella/EC-ES-EX/chromomap/DATA",
+	"captus" : {
+		"DNA" : "DNA_matches",
+		"CLR" : "CLR_matches",
+		"NUC" : "NUC_coding_NT"
+	}
+}

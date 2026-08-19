@@ -1,0 +1,43 @@
+#######################
+# Configuration Shell #
+#######################
+
+shell.executable("/bin/bash")
+
+# Config file and useful variables loading
+configfile : "config.json"
+ref_dir = config["ref_dir"]
+genome = config["genome_ref"]
+Results = config["results_path"]
+contigs = config["contigs_path"]
+ech = config["echantillon"]
+chromomap = config["chromomap"]
+
+# List of contigs
+CAPTUS = list(config["captus"].keys())
+def get_captus(wildcards):
+    file = config["captus"][wildcards.captus]
+    return {
+        "fna": f"{contigs}/{file}.fna",
+    }
+
+# Target rules
+rule all:
+    input:
+        # Alignment to the reference genome
+        expand(f"{Results}/1-alignment/{{captus}}.bam",captus=CAPTUS),
+
+        # Coordinate-sorted BAM files for downstream steps
+        expand(f"{Results}/2-sorting/2.1-sorting/{{captus}}_sorted.bam",captus=CAPTUS),
+
+        # Duplicats removal
+        expand(f"{Results}/2-sorting/2.2-rdup/{{captus}}_rdup.bam",captus=CAPTUS),
+
+        # Locus table generation for chromosome mapping by locus type
+        expand(f"{Results}/3-tables/{{captus}}_contigs_table.txt",captus=CAPTUS),
+
+        # Locus table concatenation
+        f"{chromomap}/{ech}_contigs_table.txt"
+
+# Import rules 
+include: "rules.smk"
