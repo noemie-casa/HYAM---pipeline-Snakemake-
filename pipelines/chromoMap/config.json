@@ -1,0 +1,14 @@
+{
+	"results_path" : "/shared/projects/hyam_stages/stage_noemie/results/eunicella/WGS/chromomap",
+	"run_name" : "no_selection",
+	"ref_dir" : "/shared/projects/hyam_stages/stage_noemie/data/genome_ref/Eunicella_cavolini",
+	"genome_ref.fai" : "Eunicella_cavolini_GCA_965177985.1_jaEunCavo1.1_genomic.fna.fai",
+	"scriptdir" : "/shared/projects/hyam_stages/stage_noemie/scripts/scripts",
+	"species_ref" : "Eunicella_cavolini",
+	"window_size_for_1_pixel" : 10000,
+	"nbr_different_types" : 1,
+	"echantillons" : {
+		"SNP" : "all_indiv_SNP"
+	}
+
+}

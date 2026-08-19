@@ -1,0 +1,31 @@
+#######################
+# Configuration Shell #
+#######################
+
+shell.executable("/bin/bash")
+
+# Config file and useful variables loading
+configfile : "config.json"
+Results = config["results_path"]
+run_name = config["run_name"]
+ref_dir = config["ref_dir"]
+fai = config["genome_ref.fai"]
+species_ref = config["species_ref"]
+scriptdir = config["scriptdir"]
+window_size = config["window_size_for_1_pixel"]
+n_types = config["nbr_different_types"]
+
+# Target rules
+rule all:
+    input:
+        # Merged table containing data from the samples, Captus, and CDS pipelines
+        f"{Results}/DATA/{run_name}_table_completed.txt",
+
+        # Chromosome information table
+        f"{Results}/DATA/{species_ref}_chromosome_table.txt",
+        
+        # Interactive chromosome map generated with ChromoMap
+        f"{Results}/{run_name}_chrom_mapping.html"
+
+# Import rules 
+include: "rules.smk"
