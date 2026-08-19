@@ -1,0 +1,84 @@
+#######################
+# Configuration Shell #
+#######################
+
+shell.executable("/bin/bash")
+
+from itertools import combinations 
+
+# Config file and useful variables loading
+configfile : "config.json"
+Results = config["results_path"]
+scriptdir = config["scriptdir"]
+species_ref = config["species_ref"]
+ref_dir = config["ref_dir"]
+SNPs_list = config["SNPs_list"]
+genome = config["genome_ref"]
+annotation = config["annotation_gff"]
+bam_path = config["bam_path"]
+vcf_all_species = config["vcf_all_species"]
+missing_data = config["missing_data_accepted_for_SNP"]
+ploidy = config["species_ploidy"]
+min_coverage = config["minimum_x_coverage"]
+pi_win = config["window_for_pi_calculation"]
+pi_step = config["step_between_2_windows_for_pi_calculation"]
+fst_win = config["window_for_fst_calculation"]
+fst_step = config["step_between_2_windows_for_fst_calculation"]
+
+# list and pairs
+SPECIES = list(config["species"].keys())
+PAIRS = list(combinations(SPECIES, 2))
+
+# Sélection par gènes
+if annotation != "NONE":
+        gene_outputs = [
+                expand(f"{Results}/1-raw_analyse/1.4-nucleotide_diversity/1.4.4-pi_calculation/{{species}}_nuc_diversity.sites.pi", species=SPECIES),
+                expand(f"{Results}/1-raw_analyse/1.5-fixation_index/1.5.5-Fst/{{speciesA}}_vs_{{speciesB}}_Fst.weir.fst", zip, speciesA=[p[0] for p in PAIRS], speciesB=[p[1] for p in PAIRS]),
+                f"{Results}/2-analyses_by_genes/2.1-genes_tables/{species_ref}_genes_table.txt",
+                f"{Results}/2-analyses_by_genes/2.1-genes_tables/snp_gene_table.txt",
+                expand(f"{Results}/2-analyses_by_genes/2.2-comparisons_tables/{{speciesA}}_vs_{{speciesB}}_fst_pi_genes_tables.csv", zip, speciesA=[p[0] for p in PAIRS], speciesB=[p[1] for p in PAIRS]),
+        ]
+else:
+        gene_outputs = []
+
+# Target rules
+rule all:
+    input:
+        # Nucleotide diversity (Pi) before selecting SNPs - per species
+        # BAM file lists  for FreeBayes
+        expand(f"{Results}/1-raw_analyse/1.4-nucleotide_diversity/1.4.1-list_bam/{{species}}_bam_list.txt", species=SPECIES),
+        # VCF files for each species before selecting SNPs
+        expand(f"{Results}/1-raw_analyse/1.4-nucleotide_diversity/1.4.2-variants/{{species}}_variants.vcf", species=SPECIES),
+        # Selecting all bialelic SNPs with not too much missing data
+        expand(f"{Results}/1-raw_analyse/1.4-nucleotide_diversity/1.4.3-SNP/{{species}}_SNP.vcf", species=SPECIES),
+        # Calculating nucleotide diversity by 1000pb window for each species
+        expand(f"{Results}/1-raw_analyse/1.4-nucleotide_diversity/1.4.4-pi_calculation/{{species}}_nuc_diversity.windowed.pi", species=SPECIES),
+        # Cleaned pi tables for the plot
+        expand(f"{Results}/1-raw_analyse/1.4-nucleotide_diversity/1.4.5-clean_pi/{{species}}_nuc_diversity_table.txt", species=SPECIES),
+
+        # Fixation index (Fst) before selecting SNPs - between two species
+        # BAM file lists  for FreeBayes
+        expand(f"{Results}/1-raw_analyse/1.5-fixation_index/1.5.1-list_bam/{{speciesA}}_vs_{{speciesB}}_bam_list.txt", zip, speciesA=[p[0] for p in PAIRS], speciesB=[p[1] for p in PAIRS]),
+        # VCF files between two species before selecting SNPs
+        expand(f"{Results}/1-raw_analyse/1.5-fixation_index/1.5.2-variants/{{speciesA}}_vs_{{speciesB}}_variants.vcf", zip, speciesA=[p[0] for p in PAIRS], speciesB=[p[1] for p in PAIRS]),
+        # Selecting all bialelic SNPs with not too much missing data
+        expand(f"{Results}/1-raw_analyse/1.5-fixation_index/1.5.3-SNP/{{speciesA}}_vs_{{speciesB}}_SNP.vcf", zip, speciesA=[p[0] for p in PAIRS], speciesB=[p[1] for p in PAIRS]),
+        # Individual list by species for VCFtools
+        expand(f"{Results}/1-raw_analyse/1.5-fixation_index/1.5.4-indiv_list/{{species}}_indiv_list.txt", species=SPECIES),
+        # Windowed Fst estimates with VCFtools
+        expand(f"{Results}/1-raw_analyse/1.5-fixation_index/1.5.5-Fst/{{speciesA}}_vs_{{speciesB}}_Fst.windowed.weir.fst", zip, speciesA=[p[0] for p in PAIRS], speciesB=[p[1] for p in PAIRS]),
+        # Cleaned Fst tables for the plot
+        expand(f"{Results}/1-raw_analyse/1.5-fixation_index/1.5.6-clean_Fst/{{speciesA}}_vs_{{speciesB}}_clean_Fst_windowed.txt", zip, speciesA=[p[0] for p in PAIRS], speciesB=[p[1] for p in PAIRS]),
+
+        # Fixation index and nucleotide diversity by genes
+        gene_outputs, 
+
+        # Comparisons between Pi and Fst for each pair of species
+        expand(f"{Results}/1-raw_analyse/1.6-comparsion_2_species/1.6.1-histogram/{{speciesA}}_vs_{{speciesB}}_fst_pi_distrib_hist.png", zip, speciesA=[p[0] for p in PAIRS], speciesB=[p[1] for p in PAIRS]),
+        expand(f"{Results}/1-raw_analyse/1.6-comparsion_2_species/1.6.2-manhattan_plot/{{speciesA}}_vs_{{speciesB}}_fst_pi_man_plot.png", zip, speciesA=[p[0] for p in PAIRS], speciesB=[p[1] for p in PAIRS]),
+        expand(f"{Results}/1-raw_analyse/1.6-comparsion_2_species/1.6.3-table/{{speciesA}}_vs_{{speciesB}}_fst_pi_tables.csv", zip, speciesA=[p[0] for p in PAIRS], speciesB=[p[1] for p in PAIRS]),
+        expand(f"{Results}/1-raw_analyse/1.6-comparsion_2_species/1.6.4-biplot/{{speciesA}}_vs_{{speciesB}}_fst_pi_biplot.png", zip, speciesA=[p[0] for p in PAIRS], speciesB=[p[1] for p in PAIRS])
+
+
+# Import rules 
+include: "rules.smk"
