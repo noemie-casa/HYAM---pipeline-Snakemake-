@@ -1,4 +1,4 @@
-# HYAM - Chromosome mapping and thining
+# HYAM - Chromosome mapping and thinning
 
 
 
