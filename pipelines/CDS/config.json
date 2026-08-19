@@ -1,0 +1,6 @@
+{
+	"ref_dir" : "/shared/projects/hyam_stages/stage_noemie/data/genome_ref/Eunicella_cavolini",
+	"species_ref" : "Eunicella_cavolini",
+	"annotation_gff" : "genes.gff3",
+	"chromomap" : "/shared/projects/hyam_stages/stage_noemie/results/eunicella/EC-ES-EX/chromomap/DATA"
+}

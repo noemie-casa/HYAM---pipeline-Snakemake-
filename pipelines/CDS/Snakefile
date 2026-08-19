@@ -1,0 +1,21 @@
+#######################
+# Configuration Shell #
+#######################
+
+shell.executable("/bin/bash")
+
+# Config file and useful variables loading
+configfile : "config.json"
+ref_dir = config["ref_dir"]
+species_ref = config["species_ref"]
+annotation = config["annotation_gff"]
+chromomap = config["chromomap"]
+
+# Target rules
+rule all:
+    input:
+        # CDS table generation for the chromosome mapping
+        f"{chromomap}/{species_ref}_genes_table.txt"
+
+# Import rules 
+include: "rules.smk"
