@@ -1,0 +1,23 @@
+#!/bin/bash -l
+#SBATCH --job-name=bwa_index
+#SBATCH --cpus-per-task=8
+#SBATCH --mem=64G
+
+##############################
+# Reference genome indexing
+##############################
+
+# software to load
+module load bwa-mem2/2.2.1
+
+# variables
+species="Teucrium"
+proj_path="/shared/projects/hyam_stages/stage_noemie"
+input_dir="data/genome_ref/$species"
+REF="Ref_345loci.fasta"
+
+# build index
+bwa-mem2 index "$proj_path/$input_dir/$REF"
+
+
+echo "Exit code: $?"
