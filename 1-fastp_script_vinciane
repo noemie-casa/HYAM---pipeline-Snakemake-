@@ -1,0 +1,33 @@
+#! /bin/bash
+#SBATCH -A adaptative_introgression
+#SBATCH -o ./slurm_files/slurm.%N.%j.fastp.out
+#SBATCH -e ./slurm_files/slurm.%N.%j.fastp.err
+#SBATCH --mail-type=FAIL,END
+#SBATCH --mail-user noemie.casamitjana@imbe.fr
+#SBATCH --partition long
+#SBATCH --cpus-per-task 10
+#SBATCH --mem 60GB
+#SBATCH -t 02-00:00 #(D-HH:MM)
+
+module load fastp/0.23.1
+
+#Eunicella
+#mkdir -p /shared/projects/hyam_stages/stage_noemie/data/sample/trimmed_data/eunicella/
+
+# Target sec - PFGS_2025
+for f1 in /shared/projects/adaptative_introgression/rawdata/target_seq/Eunicella/PFGS_2025_0833_260126/*R1.fastq.gz
+do
+	f2=${f1%%R1.fastq.gz}"R2.fastq.gz"
+	out=/shared/projects/hyam_stages/1-trimmed_data/eunicella/
+	ff1=${f1##*/}
+	ff2=${f2##*/}
+	out1=${out}${ff1%%.fastq.gz}".clean.fastq"
+	out2=${out}${ff2%%.fastq.gz}".clean.fastq"
+	fh1=${out}${ff1%%R1.fastq.gz}"clean.html"
+	
+	fastp -w 10 \
+		-i $f1 -I $f2 \
+		-o $out1 -O $out2 \
+		-h $fh1 \
+		-q 20 -u 20 -l 100 -y 30 -g 10 -x 10 -p 20
+done
