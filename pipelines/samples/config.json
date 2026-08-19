@@ -1,0 +1,42 @@
+{
+	"ref_dir" : "/shared/projects/hyam_stages/stage_noemie/data/genome_ref/Eunicella_cavolini",
+	"data_path" : "/shared/projects/hyam_stages/1-trimmed_data/eunicella",
+	"results_path" : "/shared/projects/hyam_stages/stage_noemie/results/eunicella/WGS/samples",
+	"chromomap" : "/shared/projects/hyam_stages/stage_noemie/results/eunicella/WGS/chromomap/DATA",
+	"scriptdir" : "/shared/projects/hyam_stages/stage_noemie/scripts/scripts",
+	"genome_ref" : "Eunicella_cavolini_GCA_965177985.1_jaEunCavo1.1_genomic.fna",
+	"genome_ref.fai" : "Eunicella_cavolini_GCA_965177985.1_jaEunCavo1.1_genomic.fna.fai",
+	"trimming" : "YES",
+	"missing_data_accepted_for_SNP" : 0.1,
+	"species_ploidy" : 2,
+	"minimum_x_coverage" : 20,
+	"k_min" : 1,
+	"k_max" : 8,
+	"nbr_of_selected_SNPs" : 500,
+	"dist_min_betwin_2_SNPs" : 1000,
+	"nbr_axes_to_plot_for_PCA": 4,
+	"methods_thining" : [
+		"random",
+		"proportional"
+	],
+	"species" : {
+		"cavolini" : [
+			"Ec_SEC_1",
+                        "Ec_MRS_5-1",
+                        "Ec_PAL_1",
+                        "Ec_MRS_3-1",
+			"Ec_EMB_1",
+                        "Ec_CAS_1"
+                ],
+                "singularis" : [
+                        "Es_TAM_1",
+                        "Es_WHI_1",
+			"Es_CAS_1",
+                        "Es_BAU_1",
+                        "Es_PIN_1",
+                        "Es_MRS_5-4",
+                        "Es_MRS_3-4"
+		]
+	}
+	    
+}
