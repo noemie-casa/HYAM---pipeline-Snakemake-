@@ -56,7 +56,7 @@ restart-times: 1
 For each pipeline, the only file you need to edit is `config.json`. <br>
 To get started, you must fill in this file with the information related to your study:
  
-### 1. samples
+### 1. Samples
 This first pipeline generates the standard files used for SNP analysis, such as BAM files resulting from read alignment and a VCF file generated after variant calling. It provides informations about individuals and SNPs mising data. It also select SNPs using three different methods in order to use them for PCA and ADMIXTURE plots and avoid biases caused by physical linkage between SNPs.
 
 **Important**: if input files have been already cleaned using a trimming program, they must have been named as follows: `{sample_code}_R1.clean.fastq` or `{sample_code}_R2.clean.fastq`.
@@ -68,19 +68,21 @@ If you want to remove an individual, you have to delete it from the individual l
 * data_path : path to the directory containing your trimmed input data files
 * results_path : path to the directory where you want to save your output files
 * chromomap : path to the directory where you want to save datafiles for the mapping
-* scriptdir : path to the directory where the R and Python scripts required for the pipeline are stored. All necessary scripts are located in `/shared/projects/hyam_stages/stage_noemie/scripts/scripts`.
+* scriptdir : path to the directory where the R and Python scripts required for the pipeline are stored. All necessary scripts are located in the `scripts` directory.
 * genome_ref : the full name of the `.fna` file containing the FASTA sequence of your reference genome. You must use the same file as in the `0-genome_index_generation` script.
 * genome_ref.fai : the full name of the `.fai` file you created with the "0-genome_index_generation" script
 * trimming : "YES" if you alreday have trimmed your data or "NO" if you have not
-* missing_data_accepted_for_SNP : maximum of proportion of missing data accepted to keep a SNP (<float>)
-* species_ploidy : ploidy of the species (<int>)
+* missing_data_accepted_for_SNP : maximum of proportion of missing data accepted to retain a SNP (<float>)
+* min_alleles_for_SNP : minimum number of alleles required to retain a SNP (<int>)
+* max_alleles_for_SNP : maximum number of alleles required to retain a SNP (<int>)
+* species_ploidy : ploidy level of the species being studied (<int>)
 * minimum_x_coverage : minimum x coverage accepted to keep a SNP, generally 20 (<int>)
 * k_min : minimum number of clusters you want ADMIXTURE to analyse (<int> > 2)
 * k_max : maximum number of cluster you want ADMIXTURE to analyse (<int>)
 * nbr_of_selected_SNPs : number of SNPs to be selected by each method. This is often very lower than the number you initially specified. (<int>)
 * dist_min_betwin_2_SNPs : minimum distance between two SNPs selected by a method to avoid linkage desequilibrium (<int>)
 * nbr_axes_to_plot_for_PCA : maximum number of discriminants axes for the PCA study (<int>)
-* methods_thining : different types of thining. **DO NOT MODIFY THIS LIST**. If you misclick, the original list is : 
+* methods_thining : different types of thinning. **DO NOT MODIFY THIS LIST**. If you misclick, the original list is : 
 ```bash
 	"methods_thining" : [
 		"random",
@@ -88,11 +90,12 @@ If you want to remove an individual, you have to delete it from the individual l
 		"ACP"
 	],
 ```
-* samples : it is a dictionary of all your samples, group by subspecies. Each dictionary key is a list of `{sample_code}` you want to analyse. These files must be stored in the "data_path" directory and must correspond to the `{sample_code}` used in the `{sample_code}_R1.clean.fastq` and `{sample_code}_R2.clean.fastq` files.
+*NB : If you want to use only one or two methods, you can modify this list, but you should restore it to its original state afterward*
+* species : it is a dictionary of all your samples, group by subspecies. Each dictionary key is a list of `{sample_code}` you want to analyse. These files must be stored in the "data_path" directory and must correspond to the `{sample_code}` used in the `{sample_code}_R1.clean.fastq` and `{sample_code}_R2.clean.fastq` files.
 
 Once this pipeline has finished, you can remove any individuals with too much missing data then rerun the pipeline.
 
-### 2. captus (optional)
+### 2. Captus (optional)
 If you run this pipeline, you can add information on coding regions, UCEs, and cluster loci to your map, in order to compare them with the location of your SNPs. 
 
 **Important**: the input files must be named as follows: `{type}.fna`.
@@ -115,32 +118,37 @@ If you run this pipeline you can add on your map informations about common genes
 
 **Important**: "genome_ref" must be the same file for the samples, captus and CDS pipelines. It is simpler to keep all reference genome-related files in the same directory.
 
-### 4. chromomap 
+### 4. ChromoMap (optional)
 This pipeline maps the information generated previously with samples, captus and CDS pipelines, onto the reference genome.
 
 * results_path : path to the directory where you want to save your output files - it must be the parent directory of "chromomap" directory generated in the previous pipelines.
 * run_name : the name of your run, used to run multiple analyses sequentially with different samples.
 * ref_dir : the directory where you stored "genome_params"
 * genome_ref.fai : the full name of the `.fai` file you created with the "0-genome_index_generation" script
-* scriptdir : path to the directory where the R and Python scripts required for the pipeline are stored. All necessary scripts are located in `/shared/projects/hyam_stages/stage_noemie/scripts/scripts`.
+* scriptdir : path to the directory where the R and Python scripts required for the pipeline are stored. All necessary scripts are located in the `scripts` directory.
 * species_ref : the species from which the reference genome is derived (<string>)
 * window_size_for_1_pixel : number of nucleotides represented by one pixel in the chromosome mapping. The larger the genome is, the higher this value should be. Choosing a value that is too high for the smallest chromosome will result in an error, while choosing a value that is too low will considerably increase the execution time. (<int>)
 * nbr_different_types : number of different types of loci present across all your sample files. For example, you may have SNPs and genes if you only run the samples and CDS pipelines, you should enter 2. (<int>)
 * echantillons : list of files created by the previous pipelines. This corresponds to the final file produced by each pipeline. Each entry must be referenced as `{sample}_{type}`. For example, if your final file is `all_indiv_SNP_table.txt`, you should define the key as `all_indiv_SNP`.
 
-The **map_analyse** pipeline also produces files that can be used in the **chromomap** pipeline. You can run it if you want to visualize the selected SNPs.
+The **samples** pipeline produces files that can be used as input for the **chromoMap** pipeline. You can run them if you want to visualize all SNPs or the SNPs selected by one of the three thinning methods.
 
-### 5. map_analyse
+### 5. Analyse (optional)
 This pipeline performs a wide range of data analyses based on nucleotide diversity and fixation index, or SNP density.
 
 * results_path : path to the directory where you want to save your output files
-* scriptdir : path to the directory where the R and Python scripts required for the pipeline are stored. All necessary scripts are located in `/shared/projects/hyam_stages/stage_noemie/scripts/scripts`.
+* scriptdir : path to the directory where the R and Python scripts required for the pipeline are stored. All necessary scripts are located in the `scripts` directory.
+* species_ref : the species from which the reference genome is derived (<string>)
 * ref_dir : the directory where you stored "genome_ref" (and all other files associated, as "genome_ref.fai")
+* SNPs_list : list of SNPs generated by the `samples` pipeline 
 * genome_ref : the full name of the `.fna` file containing the FASTA sequence of your reference genome
+* annotation_gff : the file which contains the reference genome annotation. It must be stored in "genome_ref" and must correspond to the "sepcies_ref" species.
 * bam_path : path to the directory containing the final version of the `.bam files generated by the sample pipeline
 * vcf_all_species : path and full name of the `.vcf` file created with the sample pipeline. Be careful: this must be the file containing only SNPs. It should end with `SNP.vcf`.
 * missing_data_accepted_for_SNP : maximum of proportion of missing data accepted to keep a SNP (<float>)
-* species_ploidy : ploidy of the species (<int>)
+* min_alleles_for_SNP : minimum number of alleles required to retain a SNP (<int>)
+* max_alleles_for_SNP : maximum number of alleles required to retain a SNP (<int>)
+* species_ploidy : ploidy level of the species being studied (<int>)
 * minimum_x_coverage : minimum x coverage accepted to keep a SNP, generally 20 (<int>)
 * window_for_pi_calculation : window size (in bp) used for the nucleotide diversity calculation (<int>)
 * step_between_2_windows_for_pi_calculation: step size (in bp) between two consecutive windows for the nucleotide diversity calculation. To use non-overlapping windows, set this value equal to "window_for_pi_calculation". (<int>)
