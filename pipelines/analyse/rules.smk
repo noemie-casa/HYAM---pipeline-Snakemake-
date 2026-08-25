@@ -71,7 +71,9 @@ rule nuc_selection:
                 SNP=f"{Results}/1-raw_analyse/1.4-nucleotide_diversity/1.4.3-SNP/{{species}}_SNP.vcf"
         params:
                 outdir=f"{Results}/1-raw_analyse/1.4-nucleotide_diversity/1.4.3-SNP",
-                missing_data=missing_data
+                missing_data=missing_data,
+                min=min_allele,
+                max=max_allele
         threads:
                 8
         resources:
@@ -83,7 +85,7 @@ rule nuc_selection:
 
                 # selection
                 mkdir -p {params.outdir}
-                bcftools view -v snps -m 2 -M 2 -i 'F_MISSING < {params.missing_data} && MAF > 0' {input.variants} > {output.SNP}
+                bcftools view -v snps -m {params.min} -M {params.max} -i 'F_MISSING < {params.missing_data} && MAF > 0' {input.variants} > {output.SNP}
                 """
 
 
@@ -211,7 +213,9 @@ rule fst_selection:
                 SNP=f"{Results}/1-raw_analyse/1.5-fixation_index/1.5.3-SNP/{{speciesA}}_vs_{{speciesB}}_SNP.vcf"
         params:
                 outdir=f"{Results}/1-raw_analyse/1.5-fixation_index/1.5.3-SNP",
-                missing_data=missing_data
+                missing_data=missing_data,
+                min=min_allele,
+                max=max_allele
         threads:
                 8
         resources:
@@ -223,7 +227,7 @@ rule fst_selection:
 
                 # selection
                 mkdir -p {params.outdir}
-                bcftools view -v snps -m 2 -M 2 -i 'F_MISSING < {params.missing_data} && MAF > 0' {input.variants} > {output.SNP}
+                bcftools view -v snps -m {params.min} -M {params.max} -i 'F_MISSING < {params.missing_data} && MAF > 0' {input.variants} > {output.SNP}
                 """
 
 
