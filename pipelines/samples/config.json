@@ -8,6 +8,8 @@
 	"genome_ref.fai" : "Eunicella_cavolini_GCA_965177985.1_jaEunCavo1.1_genomic.fna.fai",
 	"trimming" : "YES",
 	"missing_data_accepted_for_SNP" : 0.1,
+	"min_alleles_for_SNP" : 2,
+	"max_alleles_for_SNP" : 2,
 	"species_ploidy" : 2,
 	"minimum_x_coverage" : 20,
 	"k_min" : 1,
