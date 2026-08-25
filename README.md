@@ -96,7 +96,7 @@ If you want to remove an individual, you have to delete it from the individual l
 Once this pipeline has finished, you can remove any individuals with too much missing data then rerun the pipeline.
 
 ### 2. Captus (optional)
-If you run this pipeline, you can add information on coding regions, UCEs, and cluster loci to your map, in order to compare them with the location of your SNPs. 
+If you run this pipeline, you can add informations on coding regions, UCEs, and cluster loci to your map, in order to compare them with the location of your SNPs. 
 
 **Important**: the input files must be named as follows: `{type}.fna`.
  
@@ -109,14 +109,14 @@ If you run this pipeline, you can add information on coding regions, UCEs, and c
 * captus : list of `{type}` of Captus data you want to analyse. These files must be stored in the "contigs_path" directory and must correspond to the `{type}` used in the `{type}.fna` files.
 
 ### 3. CDS (optional)
-If you run this pipeline you can add on your map informations about common genes of yout species to compare with the location of your SNPs.
+If you run this pipeline you can add on your map informations about common genes of your species to compare with the location of your SNPs.
 
 * ref_dir : the directory where you stored "annotation_gff"
 * species_ref : the species from which the reference genome is derived (<string>). You must use the same species as for other pipelines.
 * annotation_gff : the file which contains the reference genome annotation. It must be stored in "genome_ref" and must correspond to the "sepcies_ref" species.
 * chromomap : path to the directory where you want to save datafiles for the mapping.
 
-**Important**: "genome_ref" must be the same file for the samples, captus and CDS pipelines. It is simpler to keep all reference genome-related files in the same directory.
+**Important**: "genome_ref" must be the same file for the samples, captus, CDS and analyse pipelines. It is simpler to keep all reference genome-related files in the same directory.
 
 ### 4. ChromoMap (optional)
 This pipeline maps the information generated previously with samples, captus and CDS pipelines, onto the reference genome.
@@ -134,7 +134,7 @@ This pipeline maps the information generated previously with samples, captus and
 The **samples** pipeline produces files that can be used as input for the **chromoMap** pipeline. You can run them if you want to visualize all SNPs or the SNPs selected by one of the three thinning methods.
 
 ### 5. Analyse (optional)
-This pipeline performs a wide range of data analyses based on nucleotide diversity and fixation index, or SNP density.
+This pipeline performs a wide range of data analyses based on nucleotide diversity and fixation index.
 
 * results_path : path to the directory where you want to save your output files
 * scriptdir : path to the directory where the R and Python scripts required for the pipeline are stored. All necessary scripts are located in the `scripts` directory.
@@ -157,17 +157,18 @@ This pipeline performs a wide range of data analyses based on nucleotide diversi
 * species : it is a dictionary of all your samples, group by subspecies. The sample codes must correspond to those used in the sample pipeline.
 
 
-When you fill these files, you can use the pipeline. <br>
-Go in the directory whitch contains the pipeline you need. <br>
-First of all, load the snakemake module with the command `module load snakemake/9.4.0`. <br>
-Then check if everything you enter is ok with the command `snakemake --profile slurm --executor slurm -n`. <br>
-Then execute the pipeline with the command `snakemake --profile slurm --executor slurm`. <br>
-`--profile slurm --executor slurm` is very important to use a node of the cluster.
+Once you have filled in these files, you can run the pipeline. <br>
+Go to the directory containing the pipeline you want to run: `cd <path>`.<br>
+First, load the `snakemake` module using the following command: `module load snakemake/9.4.0`.<br>
+Then, check that all your inputs and parameters are correct with: `snakemake --profile slurm --executor slurm -n`.<br>
+Finally, execute the pipeline with: `snakemake --profile slurm --executor slurm`.<br>
+
+*NB:* `--profile slurm --executor slurm` *is essential to run the pipeline on a cluster node.*
 
 *NB: If you want to stop the pipeline at a specific step, you must specify the last file you want the pipeline to produce when calling it -* `snakemake --profile slurm --executor slurm <last file created entire name>`
 
 ## IV - Help 
-For every pipeline, if you are not interested in one of the steps, you can disable it by adding a "#" in front of the corresponding rule in the Snakefile.
+For every pipeline, if you are not interested in one of the steps, you can disable it by adding a "#" in front of the corresponding rule in the `Snakefile`.
 
 If you want to check the progress of your jobs, use the command `squeue -u $USER`. <br>
 
@@ -175,12 +176,15 @@ If a R script crashes, it is often because packages are not installed. In that c
 ```bash
 module load r/4.5.2
 R
-install.packages("{package_name}") #if you don't know the package name, you can check it directly in the R script in the "/shared/projects/hyam_stages/stage_noemie/scripts/scripts" directory 
+install.packages("{package_name}") #if you don't know the package name, you can check it directly in the R script in the "scripts" directory 
 33
 q()
 n
 ```
-R Packages used in these pipelines are : `ggplot2`, `dplyr`, `patchwork`, `adegenet`, `vcfR`, `tidyr`, `tidyverse`, `ggrepel`, `chromoMap` and `htmlwidgets`.
+R packages used in these pipelines are : `ggplot2/4.0.3`, `dplyr/1.2.1`, `patchwork/1.3.2`, `adegenet/2.1.11`, `vcfR/1.16.0`, `tidyr/1.3.2`, `tidyverse/2.0.0`, `ggrepel/0.9.8`, `chromoMap/4.1.1` and `htmlwidgets/1.6.4`.
+
+Python packages used in these pipelines are : `pandas/2.3.3` and `numpy/2.4.3`. `sys`, `random`,
+`collections`, `os` and `matplotlib.pyplot` from the 3.12 version of Python were also used.
 
 The packages available on the IFB cluster and used in these pipelines are : 
 * fastp/0.23.1
@@ -194,4 +198,4 @@ The packages available on the IFB cluster and used in these pipelines are :
 * plink2/2.00a5.12
 * admixture/1.3.0
 
-The `samples`,`captus`, and `CDS` pipelines are independents and can therefore be run simultaneously. However, you must wait until they have finished before running the `chromomap` then `map_analyse` pipelines.
+The `samples`,`captus`, and `CDS` pipelines are independents and can therefore be run simultaneously. However, you must wait until they have finished before running the `chromoMap` and `analyse` pipelines.
