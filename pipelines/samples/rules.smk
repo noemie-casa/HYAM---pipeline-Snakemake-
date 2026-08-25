@@ -229,7 +229,9 @@ rule SNP:
                 SNP=f"{Results}/3-SNP_calling/3.2-SNP/all_indiv_SNP.vcf"
         params:
                 outdir=f"{Results}/3-SNP_calling/3.2-SNP",
-                missing_data=missing_data
+                missing_data=missing_data,
+                min=min_allele,
+                max=max_allele
         threads:
                 8
         resources:
@@ -241,7 +243,7 @@ rule SNP:
 
                 # selection
                 mkdir -p {params.outdir}
-                bcftools view -v snps -m 2 -M 2 -i 'F_MISSING < {params.missing_data}' {input.variants} > {output.SNP}
+                bcftools view -v snps -m {params.min} -M {params.max} -i 'F_MISSING < {params.missing_data}' {input.variants} > {output.SNP}
                 """
 
 
