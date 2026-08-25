@@ -9,6 +9,8 @@
 	"bam_path" : "/shared/projects/hyam_stages/stage_noemie/results/eunicella/EC_ES_EX_2/samples/2-sorting/2.4-rdup",
 	"vcf_all_species" : "/shared/projects/hyam_stages/stage_noemie/results/eunicella/EC_ES_EX_2/samples/3-SNP_calling/3.2-SNP/all_indiv_SNP.vcf",
 	"missing_data_accepted_for_SNP" : 0.1,
+	"min_alleles_for_SNP" : 2,
+	"max_alleles_for_SNP" : 2,
 	"species_ploidy": 2,
 	"minimum_x_coverage": 20,
 	"window_for_pi_calculation": 1000,
