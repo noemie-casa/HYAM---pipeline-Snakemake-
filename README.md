@@ -187,15 +187,15 @@ Python packages used in these pipelines are : `pandas/2.3.3` and `numpy/2.4.3`. 
 `collections`, `os` and `matplotlib.pyplot` from the 3.12 version of Python were also used.
 
 The packages available on the IFB cluster and used in these pipelines are : 
-* fastp/0.23.1
-* bwa-mem2/2.2.1
-* samtools/1.9
-* freebayes/1.2.0
-* bcftools/1.16
-* vcftools/0.1.16
-* python/3.12
-* r/4.5.2
-* plink2/2.00a5.12
-* admixture/1.3.0
+* `fastp/0.23.1`
+* `bwa-mem2/2.2.1`
+* `samtools/1.9`
+* `freebayes/1.2.0`
+* `bcftools/1.16`
+* `vcftools/0.1.16`
+* `python/3.12`
+* `r/4.5.2`
+* `plink2/2.00a5.12`
+* `admixture/1.3.0`
 
 The `samples`,`captus`, and `CDS` pipelines are independents and can therefore be run simultaneously. However, you must wait until they have finished before running the `chromoMap` and `analyse` pipelines.
