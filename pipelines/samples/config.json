@@ -24,20 +24,20 @@
 	"species" : {
 		"cavolini" : [
 			"Ec_SEC_1",
-                        "Ec_MRS_5-1",
-                        "Ec_PAL_1",
-                        "Ec_MRS_3-1",
+            "Ec_MRS_5-1",
+            "Ec_PAL_1",
+            "Ec_MRS_3-1",
 			"Ec_EMB_1",
-                        "Ec_CAS_1"
-                ],
-                "singularis" : [
-                        "Es_TAM_1",
-                        "Es_WHI_1",
+            "Ec_CAS_1"
+		],
+		"singularis" : [
+            "Es_TAM_1",
+            "Es_WHI_1",
 			"Es_CAS_1",
-                        "Es_BAU_1",
-                        "Es_PIN_1",
-                        "Es_MRS_5-4",
-                        "Es_MRS_3-4"
+            "Es_BAU_1",
+            "Es_PIN_1",
+            "Es_MRS_5-4",
+            "Es_MRS_3-4"
 		]
 	}
 	    
